@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>قوالب البوت – ACS PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="../style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../auth/auth.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 18px 50px;
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+
+    .breadcrumb span {
+      color: #e5e7eb;
+    }
+
+    .page-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .page-title {
+      font-size: 26px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-title .emoji {
+      font-size: 30px;
+    }
+
+    .page-subtitle {
+      color: #9ca3af;
+      font-size: 14px;
+      max-width: 700px;
+    }
+
+    .templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .template-card {
+      position: relative;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.08), rgba(15, 23, 42, 0.98));
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      padding: 16px 16px 18px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(14px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .template-badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: #cbd5e1;
+      align-self: flex-start;
+    }
+
+    .template-title {
+      font-size: 17px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .template-title span.emoji {
+      font-size: 20px;
+    }
+
+    .template-desc {
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    .template-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 7px 14px;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: #111827;
+      color: #e5e7eb;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22d3ee, #4f46e5);
+      color: #0b1120;
+      font-weight: 600;
+      border: none;
+      box-shadow: 0 12px 35px rgba(56, 189, 248, 0.35);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.07);
+    }
+
+    .btn-disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 8px;
+    }
+
+    .small-link {
+      font-size: 12px;
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .small-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- User bar -->
+  <div id="user-bar" style="padding:16px 24px;"></div>
+
+  <div class="page">
+    <div class="breadcrumb">
+      ACS PRO / <span>قوالب البوت</span>
+    </div>
+
+    <div class="page-header">
+      <div class="page-title">
+        <span class="emoji">🤖</span>
+        <span>اختر قالب البوت</span>
+      </div>
+      <div class="page-subtitle">
+        هنا تبني البوتات الخاصة بك. اختر قالباً جاهزاً (مثل بوت المطعم)، ثم عدِّل المنيو والرسائل وانشره على تيليجرام وواتساب.
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <a href="../dashboard/index.html" class="small-link">← العودة للوحة التحكم</a>
+    </div>
+
+    <div class="templates-grid">
+      <!-- Restaurant template -->
+      <div class="template-card">
+        <div class="template-badge">جاهز للإستخدام</div>
+        <div class="template-title">
+          <span class="emoji">🍽️</span>
+          <span>بوت المطعم – منيو + سلة طلبات</span>
+        </div>
+        <div class="template-desc">
+          بوت كامل لإدارة منيو المطعم مع صور وأقسام، سلة طلبات داخل تيليجرام، وتجميع بيانات الزبون (اسم، هاتف، عنوان).
+        </div>
+        <div class="template-footer">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span class="pill">منيو مصوّر</span>
+            <span class="pill">سلة طلبات</span>
+            <span class="pill">دردشة مع الزبون</span>
+          </div>
+          <button class="btn btn-primary" type="button" onclick="useRestaurantTemplate()">
+            🚀 استخدم هذا القالب
+          </button>
+        </div>
+      </div>
+
+      <!-- Future templates (examples only) -->
+      <div class="template-card">
+        <div class="template-badge">قريباً</div>
+        <div class="template-title">
+          <span class="emoji">🏨</span>
+          <span>بوت حجز الفنادق</span>
+        </div>
+        <div class="template-desc">
+          حجز غرف، عدد النزلاء، تواريخ الوصول والمغادرة، وربط مع نظام إدارة الفندق.
+        </div>
+        <div class="template-footer">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span class="pill">حجوزات</span>
+            <span class="pill">تأكيد عبر الواتساب</span>
+          </div>
+          <button class="btn btn-disabled" type="button">
+            قريباً
+          </button>
+        </div>
+      </div>
+
+      <div class="template-card">
+        <div class="template-badge">قريباً</div>
+        <div class="template-title">
+          <span class="emoji">🛍️</span>
+          <span>بوت متجر إلكتروني بسيط</span>
+        </div>
+        <div class="template-desc">
+          عرض منتجات، سلة مشتريات، بيانات شحن، وربط بالبوابات لاحقاً.
+        </div>
+        <div class="template-footer">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span class="pill">منتجات</span>
+            <span class="pill">سلة مشتريات</span>
+          </div>
+          <button class="btn btn-disabled" type="button">
+            قريباً
+          </button>
+        </div>
+      </div>
+
+      <div class="template-card">
+        <div class="template-badge">قريباً</div>
+        <div class="template-title">
+          <span class="emoji">📞</span>
+          <span>بوت خدمة العملاء</span>
+        </div>
+        <div class="template-desc">
+          أسئلة متكررة، فتح تذاكر دعم، وتحويل لعميل بشري عند الحاجة.
+        </div>
+        <div class="template-footer">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span class="pill">FAQ</span>
+            <span class="pill">تذاكر دعم</span>
+          </div>
+          <button class="btn btn-disabled" type="button">
+            قريباً
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      // Ensure auth (redirects if not logged in)
+      if (window.acsAuth && window.acsAuth.requireAuth) {
+        await window.acsAuth.requireAuth();
+      }
+    });
+
+    function useRestaurantTemplate() {
+      // Important: this is the link you asked for
+      // It will create a NEW bot and then redirect to ?bot_id=...
+      window.location.href = 'restaurant.html?new=1';
+    }
+  </script>
+</body>
+</html>

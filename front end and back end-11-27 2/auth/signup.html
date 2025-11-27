@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>إنشاء حساب – ACS PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="../style.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+
+  <style>
+    body {
+      background:#0b1120;
+      color:white;
+      font-family:"Tajawal",sans-serif;
+      margin:0;
+    }
+    .card {
+      background:#111827;
+      padding:32px;
+      border-radius:16px;
+      width:100%;
+      max-width:420px;
+      margin:80px auto;
+      box-shadow:0 0 30px rgba(0,0,0,0.45);
+      text-align:center;
+    }
+    input {
+      width:100%;
+      padding:14px;
+      margin-top:12px;
+      border-radius:10px;
+      border:1px solid #334155;
+      background:#1e293b;
+      color:white;
+      font-size:16px;
+      direction:ltr;
+    }
+    input::placeholder { color:#94a3b8; }
+    button {
+      width:100%;
+      padding:14px;
+      margin-top:20px;
+      border:none;
+      border-radius:10px;
+      background:linear-gradient(90deg,#38bdf8,#6366f1);
+      color:white;
+      font-size:17px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    #msg { margin-top:16px;font-size:14px; }
+    a { color:#38bdf8;text-decoration:none; }
+  </style>
+</head>
+<body>
+
+  <div id="user-bar" style="padding:16px 24px;"></div>
+
+  <div class="card">
+    <div style="font-size:32px; color:#22d3ee; font-weight:bold;">ACS PRO</div>
+    <h2 style="margin:12px 0 6px;">إنشاء حساب جديد</h2>
+    <p style="color:#94a3b8;">ابدأ رحلتك في إنشاء بوتات ذكية لعملائك</p>
+
+    <input id="name" type="text" placeholder="الاسم الكامل (اختياري)" style="direction:rtl;" />
+    <input id="email" type="email" placeholder="البريد الإلكتروني" />
+    <input id="password" type="password" placeholder="كلمة المرور" />
+
+    <button id="signupBtn">إنشاء الحساب</button>
+
+    <div id="msg"></div>
+
+    <div style="margin-top:12px;font-size:14px;">
+      لديك حساب بالفعل؟
+      <a href="login.html">تسجيل الدخول</a>
+    </div>
+  </div>
+
+  <script>
+    const client = window.supabaseClient;
+
+    document.getElementById("signupBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const fullName = document.getElementById("name").value.trim();
+      const msg = document.getElementById("msg");
+
+      if (!email || !password) {
+        msg.style.color = "red";
+        msg.innerHTML = "⚠ يرجى إدخال البريد الإلكتروني وكلمة المرور.";
+        return;
+      }
+
+      msg.style.color = "#94a3b8";
+      msg.innerHTML = "⏳ جاري إنشاء الحساب...";
+
+      const { data, error } = await client.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: fullName || null }
+        }
+      });
+
+      if (error) {
+        msg.style.color = "red";
+        msg.innerHTML = "❌ " + error.message;
+        return;
+      }
+
+      msg.style.color = "#4ade80";
+      msg.innerHTML = "✔ تم إنشاء الحساب. يمكن أن يُطلَب منك تأكيد البريد.";
+
+      setTimeout(() => {
+        window.location.href = "/"; // go home
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

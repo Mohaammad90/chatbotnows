@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>منشئ التدفق – ACS PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- Global Supabase + Auth -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../auth/auth.js"></script>
+
+  <style>
+    .page-container {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 32px 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #e5e7eb;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    .flow-wrapper {
+      background: rgba(30, 41, 59, 0.7);
+      padding: 28px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.28);
+      backdrop-filter: blur(8px);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 10px;
+    }
+
+    .section-desc {
+      font-size: 16px;
+      color: #cbd5e1;
+      margin-bottom: 18px;
+      line-height: 1.8;
+    }
+
+    .placeholder-box {
+      background: #0f172a;
+      border: 1px dashed rgba(148,163,184,0.4);
+      padding: 34px;
+      border-radius: 14px;
+      color: #94a3b8;
+      font-size: 15px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .btn-primary {
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: linear-gradient(90deg,#38bdf8,#6366f1);
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      display: inline-block;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Global User Bar -->
+  <div id="user-bar" style="padding:16px 24px;"></div>
+
+  <!-- PAGE -->
+  <div class="page-container">
+
+    <h1>منشئ التدفق (Flow Builder)</h1>
+
+    <div class="flow-wrapper">
+
+      <div class="section-title">ابنِ تدفق المحادثة</div>
+      <div class="section-desc">
+        قم بإنشاء تدفقات محادثة باستخدام السحب والإفلات، وتنظيم الخطوات، وتحديد ردود البوت.
+      </div>
+
+      <div class="placeholder-box">
+        سيتم إضافة واجهة السحب والإفلات هنا.<br>
+        (React / Canvas UI Placeholder)
+      </div>
+
+      <a class="btn-primary" href="#">إضافة خطوة جديدة</a>
+
+    </div>
+
+  </div>
+
+  <!-- Burger Menu Script -->
+  <script>
+    const navToggle = document.getElementById('navToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (navToggle && mobileMenu) {
+      navToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+      });
+    }
+  </script>
+
+</body>
+</html>

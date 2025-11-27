@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>حسابك – ACS PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../style.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+
+  <style>
+    body { background:#0b1120;color:white;font-family:"Tajawal",sans-serif;margin:0; }
+    .card {
+      background:#111827;
+      padding:32px;
+      border-radius:16px;
+      width:100%;
+      max-width:480px;
+      margin:80px auto;
+      box-shadow:0 0 30px rgba(0,0,0,0.45);
+    }
+    .row {
+      display:flex;
+      justify-content:space-between;
+      margin-top:10px;
+      font-size:14px;
+      color:#e5e7eb;
+    }
+    .label { color:#9ca3af; }
+    .btn-logout {
+      margin-top:24px;
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:10px;
+      background:linear-gradient(90deg,#38bdf8,#6366f1);
+      color:white;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="user-bar" style="padding:16px 24px;"></div>
+
+  <div class="card">
+    <h2 style="margin-top:0;margin-bottom:12px;">معلومات الحساب</h2>
+    <p style="color:#94a3b8;margin-top:0;margin-bottom:18px;">
+      هنا يمكنك رؤية بيانات حسابك وتسجيل الخروج بأمان.
+    </p>
+
+    <div class="row">
+      <span class="label">البريد الإلكتروني:</span>
+      <span id="account-email"></span>
+    </div>
+    <div class="row">
+      <span class="label">تم إنشاء الحساب في:</span>
+      <span id="account-created"></span>
+    </div>
+    <div class="row">
+      <span class="label">آخر تسجيل دخول:</span>
+      <span id="account-last-login"></span>
+    </div>
+
+    <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+  </div>
+
+</body>
+</html>

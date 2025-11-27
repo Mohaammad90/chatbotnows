@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>قوالب – ACS PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #0f172a, #020617 70%);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 30px 20px 60px;
+    }
+
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #f3f4f6;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #94a3b8;
+      margin-bottom: 30px;
+      max-width: 700px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.97);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: #38bdf8;
+    }
+
+    .emoji {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      height: 40px;
+      margin-bottom: 14px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #22d3ee, #4f46e5);
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="user-bar" style="padding:16px 24px;"></div>
+
+  <div class="page">
+    <div class="title">اختر قالب البوت</div>
+    <div class="subtitle">
+      اختر أحد القوالب الجاهزة للبدء بسرعة. كل قالب يحتوي على إعدادات وتجربة محادثة مختلفة مناسبة للصناعة.
+    </div>
+
+    <div class="grid">
+
+      <!-- ================= RESTAURANT TEMPLATE (YOUR MAIN TEMPLATE) ================= -->
+      <div class="card" onclick="window.location.href='../bot-editor/restaurant.html'">
+        <div class="emoji">🍽️</div>
+        <div class="card-title">قالب المطعم</div>
+        <div class="card-desc">طلبات – منيو – صور – سلة شراء – تيليجرام & واتساب</div>
+        <a class="btn">اختر القالب</a>
+      </div>
+
+      <!-- ================= HOTEL ================= -->
+      <div class="card">
+        <div class="emoji">🏨</div>
+        <div class="card-title">قالب الفندق</div>
+        <div class="card-desc">حجوزات – مواعيد – التحقق من التوفر</div>
+        <a class="btn">قريباً</a>
+      </div>
+
+      <!-- ================= E-COMMERCE ================= -->
+      <div class="card">
+        <div class="emoji">🛍️</div>
+        <div class="card-title">قالب المتجر الإلكتروني</div>
+        <div class="card-desc">منتجات – توصيات – تتبع الطلبات</div>
+        <a class="btn">قريباً</a>
+      </div>
+
+      <!-- ================= COFFEE SHOP ================= -->
+      <div class="card">
+        <div class="emoji">☕</div>
+        <div class="card-title">قالب الكوفي شوب</div>
+        <div class="card-desc">مشروبات – تخصيص الطلب – دفع</div>
+        <a class="btn">قريباً</a>
+      </div>
+
+      <!-- ================= REAL ESTATE ================= -->
+      <div class="card">
+        <div class="emoji">🏡</div>
+        <div class="card-title">قالب العقارات</div>
+        <div class="card-desc">استفسارات – صور عقارات – مواعيد زيارة</div>
+        <a class="btn">قريباً</a>
+      </div>
+
+      <!-- ================= CLINIC ================= -->
+      <div class="card">
+        <div class="emoji">🩺</div>
+        <div class="card-title">قالب العيادة</div>
+        <div class="card-desc">مواعيد – فحوصات – تذكيرات</div>
+        <a class="btn">قريباً</a>
+      </div>
+
+      <!-- ================= DELIVERY ================= -->
+      <div class="card">
+        <div class="emoji">🚚</div>
+        <div class="card-title">قالب التوصيل</div>
+        <div class="card-desc">استلام – توصيل – تتبع الشحنة</div>
+        <a class="btn">قريباً</a>
+      </div>
+
+      <!-- ================= CUSTOM BLANK ================= -->
+      <div class="card">
+        <div class="emoji">🧩</div>
+        <div class="card-title">قالب مخصص (فارغ)</div>
+        <div class="card-desc">ابدأ ببوت فارغ وصمم كل شيء بنفسك</div>
+        <a class="btn">قريباً</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../auth/auth.js"></script>
+</body>
+</html>

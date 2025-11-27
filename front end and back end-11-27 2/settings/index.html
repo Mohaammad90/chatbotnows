@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>إعدادات البوت – ACS PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- Supabase + Auth -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../auth/auth.js"></script>
+
+  <style>
+    .page-container {
+      max-width: 1250px;
+      margin: 0 auto;
+      padding: 32px 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #e5e7eb;
+      margin-bottom: 28px;
+    }
+
+    .settings-section {
+      background: rgba(30, 41, 59, 0.75);
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.28);
+      padding: 28px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(6px);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 14px;
+    }
+
+    .section-desc {
+      font-size: 15px;
+      color: #cbd5e1;
+      margin-bottom: 18px;
+      line-height: 1.7;
+    }
+
+    .settings-input {
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      border-radius: 12px;
+      background: #0f172a;
+      color: #e2e8f0;
+      border: 1px solid rgba(148,163,184,0.25);
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: linear-gradient(90deg,#38bdf8,#6366f1);
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      display: inline-block;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Global User Bar -->
+  <div id="user-bar" style="padding:16px 24px;"></div>
+
+  <div class="page-container">
+
+    <h1>إعدادات البوت</h1>
+
+    <!-- SECTION 1 – Bot Name -->
+    <div class="settings-section">
+      <div class="section-title">اسم البوت</div>
+      <div class="section-desc">حدد اسم البوت الخاص بك ليظهر للمستخدم أثناء المحادثة.</div>
+      <input class="settings-input" type="text" placeholder="مثال: مساعد المطعم الذكي" />
+      <button class="btn-primary">حفظ</button>
+    </div>
+
+    <!-- SECTION 2 – Welcome Message -->
+    <div class="settings-section">
+      <div class="section-title">رسالة الترحيب</div>
+      <div class="section-desc">هذه الرسالة تظهر عند فتح البوت لأول مرة.</div>
+      <textarea class="settings-input" style="min-height:130px;"></textarea>
+      <button class="btn-primary">حفظ</button>
+    </div>
+
+    <!-- SECTION 3 – Bot Avatar -->
+    <div class="settings-section">
+      <div class="section-title">صورة البوت (Avatar)</div>
+      <div class="section-desc">يمكنك رفع صورة تظهر داخل المحادثة.</div>
+      <input class="settings-input" type="file" />
+      <button class="btn-primary">رفع الصورة</button>
+    </div>
+
+    <!-- SECTION 4 – Language -->
+    <div class="settings-section">
+      <div class="section-title">لغة البوت</div>
+      <div class="section-desc">اختر اللغة الأساسية للمحادثة.</div>
+      <select class="settings-input">
+        <option>العربية</option>
+        <option>الإنجليزية</option>
+      </select>
+      <button class="btn-primary">حفظ</button>
+    </div>
+
+    <!-- SECTION 5 – Behavior -->
+    <div class="settings-section">
+      <div class="section-title">سلوك البوت</div>
+      <div class="section-desc">تحكم بالطريقة التي يرد فيها البوت على العملاء.</div>
+
+      <label style="color:#cbd5e1; display:block; margin-bottom: 8px;">
+        <input type="checkbox" /> الرد الذكي (ذكاء اصطناعي)
+      </label>
+      <label style="color:#cbd5e1; display:block; margin-bottom: 8px;">
+        <input type="checkbox" /> الردود الجاهزة فقط
+      </label>
+
+      <button class="btn-primary">حفظ</button>
+    </div>
+
+    <!-- SECTION 6 – Security -->
+    <div class="settings-section">
+      <div class="section-title">إعدادات الأمان</div>
+      <div class="section-desc">قم بحماية وصول المستخدمين وحماية البيانات.</div>
+
+      <label style="color:#cbd5e1; display:block; margin-bottom: 8px;">
+        <input type="checkbox" /> تفعيل وضع الحماية Enhanced Safety
+      </label>
+
+      <button class="btn-primary">حفظ</button>
+    </div>
+
+  </div>
+
+  <script>
+    const navToggle = document.getElementById('navToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (navToggle && mobileMenu) {
+      navToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+      });
+    }
+  </script>
+
+</body>
+</html>

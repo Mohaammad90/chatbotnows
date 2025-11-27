@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>لوحة التحكم – ACS PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <link rel="stylesheet" href="../style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../auth/auth.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-bottom: 24px;
+    }
+
+    .bots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+      gap: 18px;
+    }
+
+    .bot-card {
+      background: rgba(15,23,42,0.95);
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid rgba(148,163,184,0.4);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+    }
+
+    .bot-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .bot-meta {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      margin-bottom: 10px;
+    }
+
+    .bot-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-small {
+      padding: 7px 14px;
+      background: rgba(30,41,59,1);
+      border: 1px solid rgba(148,163,184,0.5);
+      color: #e5e7eb;
+      border-radius: 10px;
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-small:hover {
+      background: rgba(51,65,85,0.9);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg,#22d3ee,#4f46e5);
+      border: none !important;
+      color: #0f172a;
+      font-weight: 600;
+      box-shadow: 0 12px 30px rgba(56,189,248,0.4);
+    }
+
+    .telegram-link {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #38bdf8;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- User bar -->
+  <div id="user-bar" style="padding: 16px 24px;"></div>
+
+  <div class="page">
+
+    <div class="page-title">📊 لوحة التحكم</div>
+    <div class="page-subtitle">
+      هنا تجد كل البوتات التي أنشأتها. يمكنك تعديلها، إعداد النشر، أو إنشاء بوت جديد من القوالب.
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <a class="btn-small btn-primary" href="../bot-editor/index.html">
+        ➕ إنشاء بوت جديد من القوالب
+      </a>
+    </div>
+
+    <div id="botsContainer" class="bots-grid"></div>
+
+  </div>
+
+  <script>
+    async function loadBots() {
+      const supabase = window.supabaseClient;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      let result = await supabase
+        .from("bots")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      const container = document.getElementById("botsContainer");
+      container.innerHTML = "";
+
+      if (!result.data || result.data.length === 0) {
+        container.innerHTML = `
+          <div style="color:#9ca3af; font-size:14px;">
+            لا يوجد بوتات بعد. اضغط على زر "إنشاء بوت جديد".
+          </div>
+        `;
+        return;
+      }
+
+      result.data.forEach(bot => {
+        const deployed = bot.telegram_enabled || bot.deployed_at;
+        const startLink = bot.telegram_start_link || "";
+
+        const card = document.createElement("div");
+        card.className = "bot-card";
+
+        card.innerHTML = `
+          <div class="bot-title">${bot.bot_name}</div>
+          <div class="bot-meta">القالب: ${bot.template}</div>
+
+          ${deployed
+            ? `<div class="badge" style="border-color:#4ade80; color:#4ade80;">✔ جاهز للنشر</div>`
+            : `<div class="badge">مسودة</div>`}
+
+          <div class="bot-actions">
+            <a href="../bot-editor/restaurant.html?bot_id=${bot.id}" class="btn-small">
+              ✏️ تعديل البوت
+            </a>
+
+            <button class="btn-small btn-primary" onclick="openDeploy('${bot.id}')">
+              🚀 إعدادات النشر
+            </button>
+          </div>
+
+          ${startLink
+            ? `<div class="telegram-link">🔗 رابط تيليجرام الحالي: ${startLink}</div>`
+            : ""}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function openDeploy(botId) {
+      // Go to deploy page with this bot_id
+      window.location.href = `../deploy/index.html?bot_id=${encodeURIComponent(botId)}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      await window.acsAuth.requireAuth();
+      loadBots();
+    });
+  </script>
+
+</body>
+</html>

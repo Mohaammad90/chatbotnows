@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>قالب المطعم – ACS PRO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Global styles -->
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- Supabase + Auth -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../auth/auth.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0f172a 0, #020617 45%, #020617 100%);
+      color: #e5e7eb;
+      min-height: 100vh;
+    }
+
+    /* ==== PAGE & LAYOUT (BIGGER, WIDER) ==== */
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 24px 60px;
+      font-size: 15px;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 14px;
+    }
+
+    .breadcrumb span {
+      color: #e5e7eb;
+    }
+
+    .page-header {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-size: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .page-title .emoji {
+      font-size: 36px;
+    }
+
+    .page-subtitle {
+      color: #9ca3af;
+      font-size: 15px;
+      max-width: 820px;
+      line-height: 1.7;
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* ==== BUTTONS (BIGGER) ==== */
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 10px 22px;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      background: #111827;
+      color: #e5e7eb;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #22d3ee, #4f46e5);
+      color: #0b1120;
+      font-weight: 600;
+      border: none;
+      box-shadow: 0 14px 40px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+    }
+
+    .btn-primary[disabled] {
+      opacity: 0.55;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-outline {
+      border-color: rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .btn-outline:hover {
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 6px 14px;
+      font-size: 13px;
+      background: transparent;
+      cursor: pointer;
+      color: #e5e7eb;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(30, 64, 175, 0.7);
+    }
+
+    /* ==== CARDS ==== */
+    .card {
+      background: rgba(15, 23, 42, 0.97);
+      border-radius: 22px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      padding: 22px 22px 26px;
+      box-shadow: 0 24px 65px rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(18px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .card-title .icon {
+      font-size: 22px;
+    }
+
+    .card-subtitle {
+      font-size: 14px;
+      color: #9ca3af;
+      line-height: 1.6;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      color: #cbd5e1;
+      white-space: nowrap;
+    }
+
+    /* ==== FORM GRID & FIELDS (BIGGER INPUTS) ==== */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 20px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    .field small {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .field input[type="text"],
+    .field input[type="tel"],
+    .field input[type="number"],
+    .field textarea,
+    .field select {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 14px;
+      border: 1px solid rgba(51, 65, 85, 0.95);
+      padding: 12px 14px;
+      color: #e5e7eb;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+
+    .field textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.55);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+
+    .section-text {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    /* ==== CATEGORIES ==== */
+    .categories-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .category-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      font-size: 13px;
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    .category-pill span.remove {
+      cursor: pointer;
+      opacity: 0.85;
+    }
+
+    /* ==== MENU ITEMS (BIGGER CARDS) ==== */
+    .menu-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      margin-bottom: 8px;
+    }
+
+    .menu-items-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 600px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .menu-item-card {
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.97);
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .menu-item-card {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .menu-item-left {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-item-right {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .menu-item-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-item-title {
+      font-size: 14px;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .menu-item-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .menu-price-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .menu-price-row input[type="number"] {
+      max-width: 140px;
+    }
+
+    .menu-meta-text {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .menu-thumb {
+      width: 96px;
+      height: 96px;
+      border-radius: 16px;
+      object-fit: cover;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .menu-image-upload {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .menu-image-upload input[type="file"] {
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    /* ==== PREVIEW (BIGGER) ==== */
+    .preview-card {
+      border-radius: 18px;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.1), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      padding: 16px 16px 18px;
+      font-size: 14px;
+    }
+
+    .preview-line {
+      margin-bottom: 6px;
+    }
+
+    .preview-label {
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    .preview-value {
+      color: #e5e7eb;
+      font-size: 14px;
+    }
+
+    .preview-menu-items {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.97);
+      border: 1px dashed rgba(75, 85, 99, 0.95);
+    }
+
+    .preview-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin: 3px;
+      font-size: 12px;
+      background: rgba(15, 23, 42, 0.99);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .preview-cart {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(22, 163, 74, 0.09);
+      border: 1px solid rgba(74, 222, 128, 0.7);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ==== TOAST & ERROR ==== */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(15, 23, 42, 0.99);
+      color: #e5e7eb;
+      border-radius: 999px;
+      border: 1px solid rgba(52, 211, 153, 0.9);
+      padding: 10px 18px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+      z-index: 9999;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      transform: translateY(140%);
+      opacity: 0;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .error-box {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(127, 29, 29, 0.96);
+      border: 1px solid rgba(248, 113, 113, 0.95);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- user bar -->
+  <div id="user-bar" style="padding:16px 24px;"></div>
+
+  <div class="page">
+    <div class="breadcrumb">
+      ACS PRO / <span>قالب المطعم</span>
+    </div>
+
+    <div class="page-header">
+      <div class="page-title">
+        <span class="emoji">🍽️</span>
+        <span>بوت المطعم – إعداد المنيو و الطلبات</span>
+      </div>
+      <div class="page-subtitle">
+        هذه نسخة من قالب المطعم خاصة بحسابك. عدّل بيانات المطعم، المنيو المصوّر، وإعدادات السلة. عند الحفظ، يتم تخزين البوت في لوحة التحكم ويمكنك نشره على تيليجرام وواتساب.
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div>
+        <button id="saveBtn" class="btn btn-primary" disabled>💾 حفظ البوت في حسابي</button>
+      </div>
+      <div>
+        <a id="backDashboardBtn" class="btn btn-outline" href="../dashboard/index.html">
+          ← العودة للوحة التحكم
+        </a>
+      </div>
+    </div>
+
+    <div class="layout">
+      <!-- LEFT: main form + menu builder -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="icon">🏪</span>
+              <span>بيانات المطعم و إعداد المنيو</span>
+            </div>
+            <div class="card-subtitle">
+              أدخل تفاصيل المطعم ثم أضف أقسام المنيو والعناصر مع الصور والأسعار.
+            </div>
+          </div>
+          <div class="badge" id="botStatusBadge">جاري التهيئة...</div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="botName">اسم البوت داخل لوحة التحكم</label>
+            <input type="text" id="botName" placeholder="مثال: بوت مطعم الشام" />
+            <small>هذا الاسم يظهر لك في لوحة التحكم فقط.</small>
+          </div>
+
+          <div class="field">
+            <label for="restaurantName">اسم المطعم</label>
+            <input type="text" id="restaurantName" placeholder="مثال: مطعم الشام للأكلات الشرقية" />
+          </div>
+
+          <div class="field">
+            <label for="restaurantTagline">سطر تسويقي</label>
+            <input type="text" id="restaurantTagline" placeholder="مثال: طعم البيت السوري الأصلي" />
+          </div>
+
+          <div class="field">
+            <label for="phoneNumber">رقم التواصل</label>
+            <input type="tel" id="phoneNumber" placeholder="+1 (616) 555-1234" />
+          </div>
+
+          <div class="field">
+            <label for="address">العنوان</label>
+            <input type="text" id="address" placeholder="العنوان الكامل للفرع" />
+          </div>
+
+          <div class="field">
+            <label for="openingHours">أوقات العمل</label>
+            <input type="text" id="openingHours" placeholder="مثال: يومياً من 11 صباحاً حتى 11 مساءً." />
+          </div>
+
+          <div class="field">
+            <label for="deliveryOptions">خيارات التوصيل</label>
+            <textarea id="deliveryOptions" placeholder="مثال: نوفر توصيل داخل المدينة، مع إمكانية الاستلام من الفرع."></textarea>
+          </div>
+
+          <div class="field">
+            <label for="primaryColor">اللون الأساسي</label>
+            <input type="text" id="primaryColor" placeholder="#38bdf8" />
+            <small>يُستخدم لاحقاً في الويدجت والواجهة الرسومية.</small>
+          </div>
+
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="welcomeMessage">رسالة الترحيب</label>
+            <textarea id="welcomeMessage" placeholder="مثال: مرحباً 👋، معك المساعد الذكي لمطعم الشام. هل ترغب في الإطلاع على المنيو أم عمل طلب مباشر؟"></textarea>
+          </div>
+
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="quickReplies">أسئلة وأجوبة سريعة (FAQ)</label>
+            <textarea id="quickReplies" placeholder="س: هل يوجد توصيل؟&#10;ج: نعم، نوفر خدمة التوصيل داخل المدينة.&#10;&#10;س: ما هي أوقات العمل؟&#10;ج: يومياً من 11 صباحاً حتى 11 مساءً."></textarea>
+            <small>اكتب بصيغة سؤال/جواب، يمكن للبوت استخدامها لاحقاً للإجابات السريعة.</small>
+          </div>
+        </div>
+
+        <div class="section-title">أقسام المنيو (التصنيفات)</div>
+        <div class="section-text">
+          مثال: "المشاوي"، "السندويشات"، "المشروبات". سيتم ربط كل طبق بقسم معيّن.
+        </div>
+
+        <div class="categories-row" id="categoriesContainer"></div>
+
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="field">
+            <label for="newCategoryName">إضافة قسم جديد</label>
+            <input type="text" id="newCategoryName" placeholder="مثال: المشاوي" />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button id="addCategoryBtn" class="btn-ghost" type="button">➕ إضافة قسم</button>
+          </div>
+        </div>
+
+        <div class="section-title">المنيو مع الصور</div>
+        <div class="section-text">
+          أضف عناصر المنيو. كل عنصر يحتوي على اسم، وصف، سعر، قسم، وصورة. هذه البيانات تُستخدم في بوت تيليجرام / واتساب (ويتم إرسال الصور مع أزرار إضافة للسلة).
+        </div>
+
+        <div class="menu-header-row">
+          <span class="menu-meta-text">يمكنك إضافة عدد غير محدود من العناصر.</span>
+          <button id="addMenuItemBtn" class="btn-ghost" type="button">➕ إضافة عنصر جديد</button>
+        </div>
+
+        <div id="menuItemsContainer" class="menu-items-container"></div>
+
+        <div class="section-title">إعدادات السلة (Cart)</div>
+        <div class="section-text">
+          هذه الإعدادات تساعد البوت على إنشاء "سلة طلب" داخل تيليجرام / واتساب، بحيث يستطيع الزبون اختيار أكثر من طبق قبل التأكيد.
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>
+              <input type="checkbox" id="cartEnabled" style="width:auto; margin-left:6px;">
+              تفعيل السلة داخل البوت
+            </label>
+            <small>عند التفعيل، البوت سيبني سلة طلبات بدلاً من طلب واحد لكل رسالة.</small>
+          </div>
+
+          <div class="field">
+            <label for="cartCurrency">عملة الأسعار</label>
+            <input type="text" id="cartCurrency" placeholder="USD / SAR / AED" />
+          </div>
+
+          <div class="field">
+            <label for="cartMinOrder">الحد الأدنى للطلب</label>
+            <input type="number" id="cartMinOrder" min="0" step="0.01" placeholder="0 = بدون حد أدنى" />
+          </div>
+
+          <div class="field">
+            <label for="cartMaxItems">أقصى عدد لعناصر السلة</label>
+            <input type="number" id="cartMaxItems" min="0" step="1" placeholder="0 = بدون حد" />
+          </div>
+
+          <div class="field" style="grid-column: 1 / -1;">
+            <label for="cartNotesPlaceholder">ملاحظات الطلب (Placeholder)</label>
+            <input type="text" id="cartNotesPlaceholder" placeholder="مثال: أي ملاحظات إضافية على طلبك؟" />
+          </div>
+        </div>
+
+        <div id="errorContainer"></div>
+      </div>
+
+      <!-- RIGHT: live preview -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <span class="icon">👁️</span>
+              <span>معاينة سريعة لإعدادات البوت</span>
+            </div>
+            <div class="card-subtitle">
+              هذه ليست محاكاة كاملة، لكنها تعطيك فكرة عن شكل معلومات المطعم والمنيو والسلة كما ستظهر للعميل.
+            </div>
+          </div>
+          <div class="badge">Preview</div>
+        </div>
+
+        <div class="preview-card" id="previewCard"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">
+    <span id="toastMessage">تم الحفظ</span>
+  </div>
+
+  <script>
+    // ===== GLOBALS =====
+    var toast = null;
+    var toastMessage = null;
+
+    var currentUser = null;
+    var currentBotId = null;
+
+    // categories: [{id, name}]
+    var categories = [];
+    // menuState: [{id, categoryId, name, description, price, imageUrl}]
+    var menuState = [];
+
+    var STORAGE_BUCKET = 'bot-assets';
+
+    // 🔹 Ensure unique category IDs (fix duplicate cat_4, etc.)
+    function ensureUniqueCategoryId(rawId) {
+      var base = rawId || ('cat_' + (categories.length + 1));
+      var candidate = base;
+      var counter = 1;
+
+      while (categories.some(function (c) { return c.id === candidate; })) {
+        candidate = base + '_' + counter;
+        counter++;
+      }
+      return candidate;
+    }
+
+    // 🔹 Ensure unique item IDs (fix duplicate item_4, item_5, etc.)
+    function ensureUniqueItemId(rawId) {
+      var base = rawId || ('item_' + (menuState.length + 1));
+      var candidate = base;
+      var counter = 1;
+
+      while (menuState.some(function (it) { return it.id === candidate; })) {
+        candidate = base + '_' + counter;
+        counter++;
+      }
+      return candidate;
+    }
+
+    function showToast(msg) {
+      if (!toast || !toastMessage) return;
+      toastMessage.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(function () {
+        toast.classList.remove('show');
+      }, 2200);
+    }
+
+    function ensureSupabase() {
+      if (!window.supabaseClient) {
+        console.error('supabaseClient is not available on window.');
+        var errBox = document.getElementById('errorContainer');
+        errBox.innerHTML =
+          '<div class="error-box">' +
+          'خطأ في الاتصال بقاعدة البيانات. تأكد من إعداد <code>auth.js</code> بشكل صحيح ووجود <code>window.supabaseClient</code>.' +
+          '</div>';
+        return null;
+      }
+      return window.supabaseClient;
+    }
+
+    // ===== CATEGORY HELPERS =====
+    function addCategory(initial) {
+      var name = (initial && initial.name) || '';
+      if (!name.trim()) return;
+
+      // لا نسمح باسم مكرر
+      for (var i = 0; i < categories.length; i++) {
+        if (categories[i].name.trim() === name.trim()) {
+          return;
+        }
+      }
+
+      // تأكد من أن الـ ID فريد
+      var rawId = (initial && initial.id) || ('cat_' + (categories.length + 1));
+      var id = ensureUniqueCategoryId(rawId);
+
+      categories.push({ id: id, name: name.trim() });
+      renderCategories();
+      updatePreview();
+    }
+
+    function removeCategory(catId) {
+      categories = categories.filter(function (c) { return c.id !== catId; });
+      for (var i = 0; i < menuState.length; i++) {
+        if (menuState[i].categoryId === catId) {
+          menuState[i].categoryId = null;
+        }
+      }
+      renderCategories();
+      renderMenuList();
+      updatePreview();
+    }
+
+    function renderCategories() {
+      var container = document.getElementById('categoriesContainer');
+      container.innerHTML = '';
+
+      if (!categories.length) {
+        container.innerHTML = '<div class="menu-meta-text">لم تُضِف أي قسم بعد. اكتب اسم قسم واضغط "إضافة قسم".</div>';
+        return;
+      }
+
+      for (var i = 0; i < categories.length; i++) {
+        (function (cat) {
+          var pill = document.createElement('div');
+          pill.className = 'category-pill';
+
+          var textSpan = document.createElement('span');
+          textSpan.textContent = cat.name;
+
+          var removeSpan = document.createElement('span');
+          removeSpan.className = 'remove';
+          removeSpan.textContent = '✕';
+          removeSpan.title = 'حذف القسم';
+          removeSpan.addEventListener('click', function () {
+            if (confirm('حذف هذا القسم؟ لن يتم حذف الأطباق، لكن سيتم فك ارتباطها بهذا القسم.')) {
+              removeCategory(cat.id);
+            }
+          });
+
+          pill.appendChild(textSpan);
+          pill.appendChild(removeSpan);
+          container.appendChild(pill);
+        })(categories[i]);
+      }
+    }
+
+    function getCategoryName(catId) {
+      if (!catId) return 'بدون قسم';
+      for (var i = 0; i < categories.length; i++) {
+        if (categories[i].id === catId) {
+          return categories[i].name;
+        }
+      }
+      return 'بدون قسم';
+    }
+
+    // ===== MENU RENDERING =====
+    function renderMenuList() {
+      var container = document.getElementById('menuItemsContainer');
+      container.innerHTML = '';
+
+      if (!menuState.length) {
+        container.innerHTML =
+          '<div class="menu-meta-text">لم تُضِف أي عنصر بعد. استخدم زر "إضافة عنصر جديد".</div>';
+        updatePreview();
+        return;
+      }
+
+      for (var i = 0; i < menuState.length; i++) {
+        (function (item, index) {
+          var card = document.createElement('div');
+          card.className = 'menu-item-card';
+
+          var left = document.createElement('div');
+          left.className = 'menu-item-left';
+
+          var topRow = document.createElement('div');
+          topRow.className = 'menu-item-top-row';
+
+          var titleEl = document.createElement('div');
+          titleEl.className = 'menu-item-title';
+          titleEl.textContent = 'عنصر #' + (index + 1);
+
+          var actions = document.createElement('div');
+          actions.className = 'menu-item-actions';
+
+          var idPill = document.createElement('span');
+          idPill.className = 'pill';
+          idPill.textContent = item.id;
+
+          var deleteBtn = document.createElement('button');
+          deleteBtn.className = 'btn-ghost';
+          deleteBtn.textContent = '🗑 حذف';
+          deleteBtn.addEventListener('click', function () {
+            deleteMenuItem(item.id);
+          });
+
+          actions.appendChild(idPill);
+          actions.appendChild(deleteBtn);
+
+          topRow.appendChild(titleEl);
+          topRow.appendChild(actions);
+
+          left.appendChild(topRow);
+
+          // Category select
+          var catField = document.createElement('div');
+          catField.className = 'field';
+          var catLabel = document.createElement('label');
+          catLabel.textContent = 'القسم';
+          var catSelect = document.createElement('select');
+
+          var optNone = document.createElement('option');
+          optNone.value = '';
+          optNone.textContent = 'بدون قسم';
+          catSelect.appendChild(optNone);
+
+          for (var c = 0; c < categories.length; c++) {
+            var opt = document.createElement('option');
+            opt.value = categories[c].id;
+            opt.textContent = categories[c].name;
+            if (item.categoryId === categories[c].id) {
+              opt.selected = true;
+            }
+            catSelect.appendChild(opt);
+          }
+
+          catSelect.addEventListener('change', function (e) {
+            item.categoryId = e.target.value || null;
+            updatePreview();
+          });
+
+          catField.appendChild(catLabel);
+          catField.appendChild(catSelect);
+          left.appendChild(catField);
+
+          // Name field
+          var nameField = document.createElement('div');
+          nameField.className = 'field';
+          var nameLabel = document.createElement('label');
+          nameLabel.textContent = 'اسم الطبق';
+          var nameInput = document.createElement('input');
+          nameInput.type = 'text';
+          nameInput.value = item.name || '';
+          nameInput.placeholder = 'مثال: شاورما دجاج';
+          nameInput.addEventListener('input', function (e) {
+            item.name = e.target.value;
+            updatePreview();
+          });
+          nameField.appendChild(nameLabel);
+          nameField.appendChild(nameInput);
+
+          left.appendChild(nameField);
+
+          // Description field
+          var descField = document.createElement('div');
+          descField.className = 'field';
+          var descLabel = document.createElement('label');
+          descLabel.textContent = 'وصف الطبق';
+          var descTextarea = document.createElement('textarea');
+          descTextarea.value = item.description || '';
+          descTextarea.placeholder = 'مثال: شاورما دجاج مع صلصة الثوم والبطاطا المقلية.';
+          descTextarea.addEventListener('input', function (e) {
+            item.description = e.target.value;
+            updatePreview();
+          });
+          descField.appendChild(descLabel);
+          descField.appendChild(descTextarea);
+
+          left.appendChild(descField);
+
+          // Price
+          var priceRow = document.createElement('div');
+          priceRow.className = 'menu-price-row';
+          var priceField = document.createElement('div');
+          priceField.className = 'field';
+          var priceLabel = document.createElement('label');
+          priceLabel.textContent = 'السعر';
+          var priceInput = document.createElement('input');
+          priceInput.type = 'number';
+          priceInput.step = '0.01';
+          priceInput.min = '0';
+          priceInput.value = (typeof item.price === 'number') ? item.price : 0;
+          priceInput.addEventListener('input', function (e) {
+            var val = parseFloat(e.target.value || '0');
+            if (isNaN(val)) val = 0;
+            item.price = val;
+            updatePreview();
+          });
+          priceField.appendChild(priceLabel);
+          priceField.appendChild(priceInput);
+          priceRow.appendChild(priceField);
+
+          var priceHint = document.createElement('div');
+          priceHint.className = 'menu-meta-text';
+          priceHint.textContent = 'اتركها 0 لو كان السعر حسب الطلب.';
+          priceRow.appendChild(priceHint);
+
+          left.appendChild(priceRow);
+
+          // RIGHT side: image + meta
+          var right = document.createElement('div');
+          right.className = 'menu-item-right';
+
+          var imgWrapper = document.createElement('div');
+          imgWrapper.className = 'menu-image-upload';
+
+          var imgLabel = document.createElement('div');
+          imgLabel.textContent = 'صورة الطبق (اختياري)';
+
+          var imgRow = document.createElement('div');
+          imgRow.style.display = 'flex';
+          imgRow.style.gap = '10px';
+          imgRow.style.alignItems = 'center';
+          imgRow.style.flexWrap = 'wrap';
+
+          if (item.imageUrl) {
+            var imgEl = document.createElement('img');
+            imgEl.src = item.imageUrl;
+            imgEl.alt = item.name || 'صورة الطبق';
+            imgEl.className = 'menu-thumb';
+            imgRow.appendChild(imgEl);
+          }
+
+          var fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.accept = 'image/*';
+          fileInput.addEventListener('change', function (e) {
+            handleImageFileChange(e, item.id);
+          });
+
+          imgRow.appendChild(fileInput);
+
+          imgWrapper.appendChild(imgLabel);
+          imgWrapper.appendChild(imgRow);
+
+          var imgHint = document.createElement('div');
+          imgHint.className = 'menu-meta-text';
+          imgHint.textContent = 'بعد رفع الصورة، سيتم استخدام الرابط داخل بوت تيليجرام / واتساب.';
+          imgWrapper.appendChild(imgHint);
+
+          right.appendChild(imgWrapper);
+
+          card.appendChild(left);
+          card.appendChild(right);
+
+          container.appendChild(card);
+        })(menuState[i], i);
+      }
+
+      updatePreview();
+    }
+
+    function addMenuItem(initialData) {
+      var idx = menuState.length + 1;
+
+      var rawId = (initialData && initialData.id) || ('item_' + idx);
+      var id = ensureUniqueItemId(rawId);
+
+      var item = {
+        id: id,
+        categoryId: (initialData && initialData.categoryId) || null,
+        name: (initialData && initialData.name) || '',
+        description: (initialData && initialData.description) || '',
+        price: (initialData && typeof initialData.price === 'number') ? initialData.price : 0,
+        imageUrl: (initialData && initialData.imageUrl) || ''
+      };
+      menuState.push(item);
+      renderMenuList();
+    }
+
+    function deleteMenuItem(itemId) {
+      menuState = menuState.filter(function (item) {
+        return item.id !== itemId;
+      });
+      renderMenuList();
+    }
+
+    async function handleImageFileChange(event, itemId) {
+      var file = event.target.files[0];
+      if (!file) return;
+      if (!currentBotId) {
+        showToast('يجب تهيئة البوت أولاً قبل رفع الصور.');
+        event.target.value = '';
+        return;
+      }
+
+      var supabase = ensureSupabase();
+      if (!supabase) return;
+
+      var ext = '';
+      var idx = file.name.lastIndexOf('.');
+      if (idx !== -1) {
+        ext = file.name.substring(idx + 1).toLowerCase();
+      } else {
+        ext = 'jpg';
+      }
+
+      var path = 'restaurants/' + currentBotId + '/' + itemId + '_' + Date.now() + '.' + ext;
+
+      try {
+        var uploadResp = await supabase
+          .storage
+          .from(STORAGE_BUCKET)
+          .upload(path, file, { upsert: true });
+
+        if (uploadResp.error) {
+          console.error('Storage upload error:', uploadResp.error);
+          showToast('فشل رفع الصورة، حاول مرة أخرى.');
+          return;
+        }
+
+        var publicUrlInfo = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+        var publicUrl = publicUrlInfo.data && publicUrlInfo.data.publicUrl;
+
+        if (!publicUrl) {
+          showToast('تعذر الحصول على رابط الصورة.');
+          return;
+        }
+
+        for (var i = 0; i < menuState.length; i++) {
+          if (menuState[i].id === itemId) {
+            menuState[i].imageUrl = publicUrl;
+            break;
+          }
+        }
+
+        renderMenuList();
+        showToast('تم رفع الصورة بنجاح 🖼️');
+      } catch (e) {
+        console.error('Exception uploading image:', e);
+        showToast('حدث خطأ أثناء رفع الصورة.');
+      }
+    }
+
+    // ===== PREVIEW =====
+    function updatePreview() {
+      var preview = document.getElementById('previewCard');
+      if (!preview) return;
+
+      var restaurantName = document.getElementById('restaurantName').value || 'مطعم بدون اسم';
+      var tagline = document.getElementById('restaurantTagline').value || '';
+      var phone = document.getElementById('phoneNumber').value || '';
+      var address = document.getElementById('address').value || '';
+      var welcome = document.getElementById('welcomeMessage').value || 'مرحباً 👋، كيف يمكنني مساعدتك؟';
+      var opening = document.getElementById('openingHours').value || '';
+      var delivery = document.getElementById('deliveryOptions').value || '';
+
+      var cartEnabled = document.getElementById('cartEnabled').checked;
+      var cartCurrency = document.getElementById('cartCurrency').value || 'USD';
+      var cartMinOrder = parseFloat(document.getElementById('cartMinOrder').value || '0') || 0;
+      var cartMaxItems = parseInt(document.getElementById('cartMaxItems').value || '0', 10) || 0;
+      var cartNotesPlaceholder = document.getElementById('cartNotesPlaceholder').value || '';
+
+      var html = '';
+      html += '<div class="preview-line">';
+      html += '  <div class="preview-label">اسم المطعم</div>';
+      html += '  <div class="preview-value">' + restaurantName + '</div>';
+      html += '</div>';
+
+      html += '<div class="preview-line">';
+      html += '  <div class="preview-label">سطر تسويقي</div>';
+      html += '  <div class="preview-value">' + (tagline || '—') + '</div>';
+      html += '</div>';
+
+      html += '<div class="preview-line">';
+      html += '  <div class="preview-label">هاتف / عنوان</div>';
+      html += '  <div class="preview-value">' + (phone || '—') + (address ? ' • ' + address : '') + '</div>';
+      html += '</div>';
+
+      if (opening) {
+        html += '<div class="preview-line">';
+        html += '  <div class="preview-label">أوقات العمل</div>';
+        html += '  <div class="preview-value">' + opening + '</div>';
+        html += '</div>';
+      }
+
+      if (delivery) {
+        html += '<div class="preview-line">';
+        html += '  <div class="preview-label">التوصيل</div>';
+        html += '  <div class="preview-value">' + delivery + '</div>';
+        html += '</div>';
+      }
+
+      html += '<div class="preview-line" style="margin-top:8px;">';
+      html += '  <div class="preview-label">رسالة الترحيب</div>';
+      html += '  <div class="preview-value">' + welcome.replace(/\n/g, '<br>') + '</div>';
+      html += '</div>';
+
+      // categories
+      html += '<div class="preview-line" style="margin-top:10px;">';
+      html += '  <div class="preview-label">أقسام المنيو</div>';
+      html += '</div>';
+
+      html += '<div class="preview-menu-items">';
+      if (categories.length) {
+        for (var c = 0; c < categories.length; c++) {
+          html += '<span class="preview-chip">📂 ' + categories[c].name + '</span>';
+        }
+      } else {
+        html += '<div class="menu-meta-text">لم تُضِف أقسام بعد.</div>';
+      }
+      html += '</div>';
+
+      // menu items
+      html += '<div class="preview-line" style="margin-top:8px;">';
+      html += '  <div class="preview-label">أمثلة من الأطباق</div>';
+      html += '</div>';
+
+      html += '<div class="preview-menu-items">';
+      if (menuState.length) {
+        for (var i = 0; i < menuState.length; i++) {
+          var it = menuState[i];
+          var priceText = (it.price && it.price > 0)
+            ? (it.price.toFixed(2) + ' ' + cartCurrency)
+            : 'حسب الطلب';
+          html += '<span class="preview-chip">' +
+            '<span>🍽️ ' + (it.name || 'بدون اسم') + '</span>' +
+            '<span>•</span>' +
+            '<span>' + priceText + '</span>' +
+            '<span>•</span>' +
+            '<span>' + getCategoryName(it.categoryId) + '</span>' +
+            '</span>';
+        }
+      } else {
+        html += '<div class="menu-meta-text">لم تُضِف عناصر منيو بعد.</div>';
+      }
+      html += '</div>';
+
+      // cart preview
+      html += '<div class="preview-cart">';
+      if (cartEnabled) {
+        html += '<div><strong>🧺 السلة مفعّلة</strong></div>';
+        html += '<div>العملة: ' + cartCurrency + '</div>';
+        if (cartMinOrder > 0) {
+          html += '<div>الحد الأدنى للطلب: ' + cartMinOrder.toFixed(2) + ' ' + cartCurrency + '</div>';
+        } else {
+          html += '<div>الحد الأدنى للطلب: لا يوجد</div>';
+        }
+        if (cartMaxItems > 0) {
+          html += '<div>أقصى عدد للعناصر في السلة: ' + cartMaxItems + '</div>';
+        }
+        if (cartNotesPlaceholder) {
+          html += '<div>رسالة ملاحظات العميل: "' + cartNotesPlaceholder + '"</div>';
+        }
+      } else {
+        html += '<div><strong>🧺 السلة غير مفعّلة</strong> – سيتم تنفيذ الطلب على شكل "طبق واحد" في كل مرة.</div>';
+      }
+      html += '</div>';
+
+      preview.innerHTML = html;
+    }
+
+    // ===== LOAD BOT FROM SUPABASE =====
+    async function loadBotForEdit(botId) {
+      var supabase = ensureSupabase();
+      if (!supabase) return;
+
+      var errorContainer = document.getElementById('errorContainer');
+      var botStatusBadge = document.getElementById('botStatusBadge');
+
+      var result = await supabase
+        .from('bots')
+        .select('*')
+        .eq('id', botId)
+        .eq('user_id', currentUser.id)
+        .single();
+
+      var bot = result.data;
+      var error = result.error;
+
+      if (error || !bot) {
+        console.error('Error loading bot:', error);
+        errorContainer.innerHTML =
+          '<div class="error-box">' +
+          'تعذّر تحميل هذا البوت. قد لا يكون موجوداً أو ليس مرتبطاً بحسابك.' +
+          '</div>';
+        return;
+      }
+
+      currentBotId = bot.id;
+      botStatusBadge.textContent = 'Draft';
+
+      var config = bot.config_json || {};
+
+      document.getElementById('botName').value = bot.bot_name || config.restaurantName || '';
+      document.getElementById('restaurantName').value = config.restaurantName || '';
+      document.getElementById('restaurantTagline').value = config.restaurantTagline || '';
+      document.getElementById('phoneNumber').value = config.phoneNumber || '';
+      document.getElementById('address').value = config.address || '';
+      document.getElementById('openingHours').value = config.openingHours || '';
+      document.getElementById('deliveryOptions').value = config.deliveryOptions || '';
+      document.getElementById('primaryColor').value = config.primaryColor || '#38bdf8';
+      document.getElementById('welcomeMessage').value = config.welcomeMessage || '';
+      document.getElementById('quickReplies').value = config.quickReplies || '';
+
+      var cart = config.cartSettings || {};
+      document.getElementById('cartEnabled').checked = !!cart.enabled;
+      document.getElementById('cartCurrency').value = cart.currency || '';
+      document.getElementById('cartMinOrder').value = (typeof cart.minOrder === 'number') ? cart.minOrder : '';
+      document.getElementById('cartMaxItems').value = (typeof cart.maxItems === 'number') ? cart.maxItems : '';
+      document.getElementById('cartNotesPlaceholder').value = cart.notesPlaceholder || '';
+
+      // Reset local state
+      categories = [];
+      menuState = [];
+
+      // 🔹 Structured menu (with categories & items)
+      if (Array.isArray(config.menu) && config.menu.length > 0) {
+        for (var c = 0; c < config.menu.length; c++) {
+          var cat = config.menu[c];
+          if (!cat || !cat.name) continue;
+
+          // Ensure category id is unique (fix duplicate cat_4, etc.)
+          var rawCatId = cat.id || ('cat_' + (categories.length + 1));
+          var catId = ensureUniqueCategoryId(rawCatId);
+          addCategory({ id: catId, name: cat.name });
+
+          if (Array.isArray(cat.items)) {
+            for (var j = 0; j < cat.items.length; j++) {
+              var it = cat.items[j];
+              if (typeof it !== 'object' || !it) continue;
+
+              addMenuItem({
+                id: it.id || ('item_' + (menuState.length + 1)),
+                categoryId: catId,
+                name: it.name || '',
+                description: it.description || '',
+                price: (typeof it.price === 'number') ? it.price : 0,
+                imageUrl: it.imageUrl || ''
+              });
+            }
+          }
+        }
+      } else {
+        // Legacy menuItems text
+        var menuItemsRaw = config.menuItems || '';
+        categories = [];
+        menuState = [];
+
+        if (menuItemsRaw) {
+          var defaultCatId = 'cat_main';
+          addCategory({ id: defaultCatId, name: 'قائمة الطعام' });
+
+          var lines = menuItemsRaw.split('\n');
+          var idxCounter = 1;
+          for (var li = 0; li < lines.length; li++) {
+            var line = lines[li].trim();
+            if (!line) continue;
+
+            var name = line;
+            var description = '';
+            var price = 0;
+
+            var namePart, rest;
+            if (line.indexOf('–') !== -1) {
+              var split1 = line.split('–');
+              namePart = split1[0];
+              rest = split1.slice(1).join('–');
+              name = namePart.trim();
+              rest = rest.trim();
+            } else if (line.indexOf('-') !== -1) {
+              var split2 = line.split('-');
+              namePart = split2[0];
+              rest = split2.slice(1).join('-');
+              name = namePart.trim();
+              rest = rest.trim();
+            } else {
+              rest = '';
+            }
+
+            if (rest) {
+              if (rest.indexOf('حسب') !== -1) {
+                price = 0;
+                description = 'السعر حسب الطلب.';
+              } else {
+                var amount = rest.split('$')[0].trim();
+                var parsed = parseFloat(amount);
+                if (!isNaN(parsed)) {
+                  price = parsed;
+                }
+                description = rest;
+              }
+            }
+
+            addMenuItem({
+              id: 'item_' + idxCounter,
+              categoryId: defaultCatId,
+              name: name,
+              description: description || '',
+              price: price,
+              imageUrl: ''
+            });
+            idxCounter++;
+          }
+        }
+      }
+
+      renderCategories();
+      renderMenuList();
+      updatePreview();
+    }
+
+    // ===== SAVE BOT CONFIG =====
+    async function saveBotConfig() {
+      var supabase = ensureSupabase();
+      if (!supabase) return;
+
+      if (!currentBotId) {
+        console.warn('Save clicked but bot not initialized.');
+        showToast('حدث خطأ: لم يتم تهيئة البوت بعد.');
+        return;
+      }
+
+      var botName = document.getElementById('botName').value || '';
+      var restaurantName = document.getElementById('restaurantName').value || '';
+      var restaurantTagline = document.getElementById('restaurantTagline').value || '';
+      var phoneNumber = document.getElementById('phoneNumber').value || '';
+      var address = document.getElementById('address').value || '';
+      var openingHours = document.getElementById('openingHours').value || '';
+      var deliveryOptions = document.getElementById('deliveryOptions').value || '';
+      var primaryColor = document.getElementById('primaryColor').value || '#38bdf8';
+      var welcomeMessage = document.getElementById('welcomeMessage').value || '';
+      var quickReplies = document.getElementById('quickReplies').value || '';
+
+      var cartEnabled = document.getElementById('cartEnabled').checked;
+      var cartCurrency = document.getElementById('cartCurrency').value || 'USD';
+      var cartMinOrder = parseFloat(document.getElementById('cartMinOrder').value || '0') || 0;
+      var cartMaxItems = parseInt(document.getElementById('cartMaxItems').value || '0', 10) || 0;
+      var cartNotesPlaceholder = document.getElementById('cartNotesPlaceholder').value || '';
+
+      var menuStructured = [];
+      for (var c = 0; c < categories.length; c++) {
+        var cat = categories[c];
+        var catItems = [];
+        for (var i = 0; i < menuState.length; i++) {
+          var it = menuState[i];
+          if (it.categoryId === cat.id) {
+            catItems.push({
+              id: it.id,
+              name: it.name || '',
+              description: it.description || '',
+              price: (typeof it.price === 'number') ? it.price : 0,
+              imageUrl: it.imageUrl || ''
+            });
+          }
+        }
+        if (catItems.length > 0) {
+          menuStructured.push({
+            id: cat.id,
+            name: cat.name,
+            items: catItems
+          });
+        }
+      }
+
+      var menuItemsLines = [];
+      for (var j = 0; j < menuState.length; j++) {
+        var it2 = menuState[j];
+        var priceText;
+        if (it2.price && it2.price > 0) {
+          priceText = it2.price.toFixed(2) + ' ' + cartCurrency;
+        } else {
+          priceText = 'حسب الطلب';
+        }
+        var line = (it2.name || 'طبق بدون اسم') + ' – ' + priceText;
+        menuItemsLines.push(line);
+      }
+      var menuItemsText = menuItemsLines.join('\n');
+
+      var config = {
+        restaurantName: restaurantName,
+        restaurantTagline: restaurantTagline,
+        phoneNumber: phoneNumber,
+        address: address,
+        openingHours: openingHours,
+        deliveryOptions: deliveryOptions,
+        primaryColor: primaryColor,
+        welcomeMessage: welcomeMessage,
+        quickReplies: quickReplies,
+        menuItems: menuItemsText,
+        menu: menuStructured,
+        cartSettings: {
+          enabled: cartEnabled,
+          currency: cartCurrency,
+          minOrder: cartMinOrder,
+          maxItems: cartMaxItems,
+          notesPlaceholder: cartNotesPlaceholder
+        }
+      };
+
+      var payload = {
+        bot_name: botName || restaurantName || 'بوت المطعم',
+        template: 'restaurant',
+        config_json: config,
+        updated_at: new Date().toISOString()
+      };
+
+      var result = await supabase
+        .from('bots')
+        .update(payload)
+        .eq('id', currentBotId)
+        .eq('user_id', currentUser.id);
+
+      if (result.error) {
+        console.error('Error saving bot:', result.error);
+        showToast('فشل حفظ البوت، حاول مرة أخرى.');
+        return;
+      }
+
+      showToast('تم حفظ البوت على حسابك ✅');
+      setTimeout(function () {
+        window.location.href = '../dashboard/index.html';
+      }, 1400);
+    }
+
+    // ===== INIT TEMPLATE (AUTO CREATE OR LOAD BOT) =====
+    async function initTemplate() {
+      toast = document.getElementById('toast');
+      toastMessage = document.getElementById('toastMessage');
+
+      var supabase = ensureSupabase();
+      if (!supabase) return;
+
+      var user = await window.acsAuth.requireAuth();
+      if (!user) return;
+      currentUser = user;
+
+      var params = new URLSearchParams(window.location.search);
+      var botId = params.get('bot_id');
+      var isNew = params.get('new') === '1';
+
+      var botStatusBadge = document.getElementById('botStatusBadge');
+      var saveBtn = document.getElementById('saveBtn');
+      var errorContainer = document.getElementById('errorContainer');
+
+      // 1) EDIT MODE → load existing bot
+      if (botId) {
+        await loadBotForEdit(botId);
+        if (currentBotId) {
+          saveBtn.disabled = false;
+          botStatusBadge.textContent = "Draft";
+        }
+        return;
+      }
+
+      // 2) NEW BOT CREATION FROM TEMPLATES PAGE
+      if (isNew) {
+        console.log("Creating NEW restaurant bot...");
+
+        var insert = await supabase
+          .from("bots")
+          .insert({
+            user_id: user.id,
+            bot_name: "بوت مطعم جديد",
+            template: "restaurant",
+            config_json: {},
+            created_at: new Date().toISOString()
+          })
+          .select()
+          .single();
+
+        if (insert.error || !insert.data) {
+          console.error("Error creating bot:", insert.error);
+          errorContainer.innerHTML = `
+            <div class="error-box">
+              تعذّر إنشاء البوت الجديد. حاول مرة أخرى.
+            </div>`;
+          botStatusBadge.textContent = "خطأ";
+          return;
+        }
+
+        currentBotId = insert.data.id;
+
+        // Replace ?new=1 → ?bot_id=...
+        var newUrl = window.location.pathname + "?bot_id=" + encodeURIComponent(currentBotId);
+        window.history.replaceState(null, "", newUrl);
+
+        // Create default category + empty menu
+        categories = [];
+        menuState = [];
+        addCategory({ id: "cat_main", name: "قائمة الطعام" });
+
+        renderCategories();
+        renderMenuList();
+        updatePreview();
+
+        saveBtn.disabled = false;
+        botStatusBadge.textContent = "Draft";
+
+        return;
+      }
+
+      // 3) NOT ALLOWED → redirect to template cards
+      window.location.href = "../bot-editor/index.html";
+    }
+
+    // ===== DOM READY =====
+    document.addEventListener('DOMContentLoaded', function () {
+      var addCategoryBtn = document.getElementById('addCategoryBtn');
+      var newCategoryNameInput = document.getElementById('newCategoryName');
+      var addMenuItemBtn = document.getElementById('addMenuItemBtn');
+      var saveBtn = document.getElementById('saveBtn');
+
+      addCategoryBtn.addEventListener('click', function () {
+        var name = newCategoryNameInput.value || '';
+        if (!name.trim()) {
+          showToast('اكتب اسم القسم أولاً.');
+          return;
+        }
+        addCategory({ name: name.trim() });
+        newCategoryNameInput.value = '';
+      });
+
+      addMenuItemBtn.addEventListener('click', function () {
+        addMenuItem();
+      });
+
+      saveBtn.addEventListener('click', function () {
+        saveBotConfig();
+      });
+
+      updatePreview();
+      initTemplate();
+    });
+  </script>
+</body>
+</html>
