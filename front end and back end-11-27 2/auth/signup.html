@@ -11,47 +11,49 @@
 
   <style>
     body {
-      background:#0b1120;
-      color:white;
-      font-family:"Tajawal",sans-serif;
+      background:linear-gradient(180deg,#f7f7fa 0%, #f0f1f5 100%);
+      color:#1d1d1f;
+      font-family:"SF Pro Display", "Tajawal", -apple-system, system-ui, sans-serif;
       margin:0;
     }
     .card {
-      background:#111827;
-      padding:32px;
-      border-radius:16px;
+      background:#ffffff;
+      padding:36px;
+      border-radius:20px;
       width:100%;
       max-width:420px;
       margin:80px auto;
-      box-shadow:0 0 30px rgba(0,0,0,0.45);
+      box-shadow:0 24px 70px rgba(0,0,0,0.08);
       text-align:center;
+      border:1px solid rgba(0,0,0,0.05);
     }
     input {
       width:100%;
-      padding:14px;
+      padding:14px 16px;
       margin-top:12px;
-      border-radius:10px;
-      border:1px solid #334155;
-      background:#1e293b;
-      color:white;
+      border-radius:14px;
+      border:1px solid rgba(0,0,0,0.12);
+      background:#f7f7fa;
+      color:#1d1d1f;
       font-size:16px;
       direction:ltr;
     }
-    input::placeholder { color:#94a3b8; }
+    input::placeholder { color:#6e6e73; }
     button {
       width:100%;
       padding:14px;
       margin-top:20px;
       border:none;
-      border-radius:10px;
-      background:linear-gradient(90deg,#38bdf8,#6366f1);
+      border-radius:14px;
+      background:linear-gradient(145deg,#0a84ff,#1d7bff);
       color:white;
       font-size:17px;
-      font-weight:bold;
+      font-weight:600;
       cursor:pointer;
+      box-shadow:0 16px 44px rgba(10,132,255,0.28);
     }
-    #msg { margin-top:16px;font-size:14px; }
-    a { color:#38bdf8;text-decoration:none; }
+    #msg { margin-top:16px;font-size:14px; color:#1d1d1f; }
+    a { color:#0a84ff;text-decoration:none; }
   </style>
 </head>
 <body>
@@ -59,9 +61,9 @@
   <div id="user-bar" style="padding:16px 24px;"></div>
 
   <div class="card">
-    <div style="font-size:32px; color:#22d3ee; font-weight:bold;">ACS PRO</div>
+    <div style="font-size:32px; color:#0a84ff; font-weight:700; letter-spacing:-0.02em;">ACS PRO</div>
     <h2 style="margin:12px 0 6px;">إنشاء حساب جديد</h2>
-    <p style="color:#94a3b8;">ابدأ رحلتك في إنشاء بوتات ذكية لعملائك</p>
+    <p style="color:#6e6e73;">ابدأ رحلتك في إنشاء بوتات ذكية لعملائك</p>
 
     <input id="name" type="text" placeholder="الاسم الكامل (اختياري)" style="direction:rtl;" />
     <input id="email" type="email" placeholder="البريد الإلكتروني" />

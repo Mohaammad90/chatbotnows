@@ -11,28 +11,29 @@
     body {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at top, #0f172a, #020617 70%);
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      color: #e5e7eb;
+      background: linear-gradient(180deg,#f7f7fa 0%, #f0f1f5 100%);
+      font-family: "SF Pro Display", system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #1d1d1f;
       min-height: 100vh;
     }
 
     .page {
       max-width: 1250px;
       margin: 0 auto;
-      padding: 30px 20px 60px;
+      padding: 40px 20px 70px;
     }
 
     .title {
       font-size: 32px;
       font-weight: 700;
       margin-bottom: 10px;
-      color: #f3f4f6;
+      color: #1d1d1f;
+      letter-spacing: -0.02em;
     }
 
     .subtitle {
       font-size: 15px;
-      color: #94a3b8;
+      color: #6e6e73;
       margin-bottom: 30px;
       max-width: 700px;
     }
@@ -44,18 +45,20 @@
     }
 
     .card {
-      background: rgba(15, 23, 42, 0.97);
-      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.06);
       border-radius: 18px;
       padding: 20px;
       text-align: center;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
       cursor: pointer;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
     }
 
     .card:hover {
-      transform: translateY(-5px);
-      border-color: #38bdf8;
+      transform: translateY(-6px);
+      border-color: rgba(10,132,255,0.35);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.12);
     }
 
     .emoji {
@@ -71,20 +74,21 @@
 
     .card-desc {
       font-size: 13px;
-      color: #94a3b8;
+      color: #6e6e73;
       height: 40px;
       margin-bottom: 14px;
     }
 
     .btn {
       display: inline-block;
-      padding: 7px 14px;
+      padding: 9px 16px;
       border-radius: 999px;
-      background: linear-gradient(135deg, #22d3ee, #4f46e5);
-      color: #0f172a;
+      background: linear-gradient(145deg, #0a84ff, #1d7bff);
+      color: #fff;
       font-weight: 600;
       font-size: 13px;
       text-decoration: none;
+      box-shadow: 0 16px 44px rgba(10,132,255,0.28);
     }
   </style>
 </head>
